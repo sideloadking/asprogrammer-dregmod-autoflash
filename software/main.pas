@@ -292,6 +292,8 @@ var
   Buzzpirat_COMPort: string;
 implementation
 
+uses
+  fwpatcher;
 
 var
   TimeCounter: TDateTime;
@@ -3040,6 +3042,15 @@ try
   end;
 
   LogPrint(STR_TIME + TimeToStr(Time() - TimeCounter));
+
+  // Autoflash: after a successful read, offer to patch firmware hours + CRC in memory
+  if FWPatchFirmwareInMemory(PByte(RomF.Memory), RomF.Size) then
+  begin
+    RomF.Position := 0;
+    MPHexEditorEx.LoadFromStream(RomF);
+    StatusBar.Panels.Items[2].Text := LabelChipName.Caption + ' (patched)';
+    LogPrint('Firmware hours patched in memory - press Write IC to flash.');
+  end;
 
   CRC32 := UpdateCRC32($FFFFFFFF, Romf.Memory, Romf.Size);
   LogPrint('CRC32 = 0x'+IntToHex(CRC32, 8));
