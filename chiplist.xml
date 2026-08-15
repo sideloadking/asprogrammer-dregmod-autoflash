@@ -758,6 +758,7 @@
       <M95640W page="32" size="8192" spicmd="95"/>
       <M95M01R page="256" size="131072" spicmd="95"/>
       <M95M01W page="256" size="131072" spicmd="95"/>
+      <M95M02-DR page="256" size="262144" spicmd="95"/>
       <ST25C16 page="16" size="2048" spicmd="95"/>
       <ST25P05 id="202010" page="128" size="65536"/>
       <ST25P05A id="202010" page="256" size="65536"/>

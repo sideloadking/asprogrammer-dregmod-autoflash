@@ -40,18 +40,26 @@ jobs:
 
       - name: Build AsProgrammer
         shell: pwsh
-        run: lazbuild -B software\AsProgrammer.lpi
+        run: |
+          $ErrorActionPreference = 'Stop'
+          lazbuild -B software\AsProgrammer.lpi
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Package runnable folder
         shell: pwsh
         run: |
+          $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Path dist | Out-Null
           Copy-Item software\AsProgrammer.exe dist\
           Copy-Item software\buzzpirathlp.dll dist\
           Copy-Item software\libiconv2.dll dist\
           Copy-Item software\libintl3.dll dist\
+          Copy-Item software\FTD2XX.dll dist\
+          Copy-Item software\CH341DLL.DLL dist\
+          Copy-Item software\CH347DLL.DLL dist\
           Copy-Item software\chiplist.xml dist\
           Copy-Item drivers\AVRISPMK2\x86\libusb0_x86.dll dist\libusb0.dll
+          Copy-Item drivers\FT232\CDM212364_Setup.exe dist\
           Copy-Item software\lang dist\lang -Recurse
           Copy-Item software\icons dist\icons -Recurse
 
