@@ -3332,6 +3332,9 @@ begin
     if MainForm.MenuHWFT232H.Checked then
       TDOMElement(ParentNode).SetAttribute('hw', 'ft232h');
 
+    if CurrentICParam.Name <> '' then
+      TDOMElement(ParentNode).SetAttribute('ic_name', CurrentICParam.Name);
+
     TDOMElement(ParentNode).SetAttribute('arduino_comport', Arduino_COMPort);
     TDOMElement(ParentNode).SetAttribute('arduino_baudrate', IntToStr(Arduino_BaudRate));
 
@@ -3472,6 +3475,14 @@ begin
         OptVal := UTF16ToUTF8(Node.Attributes.GetNamedItem('arduino_baudrate').NodeValue);
 
         Arduino_BaudRate := StrToInt(OptVal);
+      end;
+
+      if  Node.Attributes.GetNamedItem('ic_name') <> nil then
+      begin
+        OptVal := UTF16ToUTF8(Node.Attributes.GetNamedItem('ic_name').NodeValue);
+
+        if OptVal <> '' then
+          findchip.SelectChip(ChipListFile, OptVal);
       end;
 
     end;
