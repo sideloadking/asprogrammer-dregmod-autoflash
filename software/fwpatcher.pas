@@ -127,67 +127,67 @@ begin
     Form.BorderStyle := bsDialog;
     Form.Position := poMainFormCenter;
     Form.FormStyle := fsStayOnTop;
-    Form.ClientWidth := 560;
-    Form.ClientHeight := 248;
+    Form.ClientWidth := 840;
+    Form.ClientHeight := 372;
 
     Title := TLabel.Create(Form);
     Title.Parent := Form;
     Title.Caption := 'Patch operating hours (applied to memory, not written yet)';
     Title.Font.Style := [fsBold];
-    Title.SetBounds(16, 12, 528, 22);
+    Title.SetBounds(24, 18, 792, 30);
 
     Info := TLabel.Create(Form);
     Info.Parent := Form;
     Info.Caption := 'CRC16-CCITT(FALSE) recalculated automatically - press Write IC.';
-    Info.SetBounds(16, 38, 528, 18);
+    Info.SetBounds(24, 52, 792, 24);
 
     LblTherapy := TLabel.Create(Form);
     LblTherapy.Parent := Form;
     LblTherapy.Caption := 'Therapy:';
-    LblTherapy.SetBounds(16, 70, 120, 24);
+    LblTherapy.SetBounds(24, 94, 180, 30);
 
     EditTherapy := TEdit.Create(Form);
     EditTherapy.Parent := Form;
     EditTherapy.Text := FormatHours(therapyHrs);
-    EditTherapy.SetBounds(140, 68, 150, 26);
+    EditTherapy.SetBounds(200, 90, 220, 32);
 
     LblTherapyOrig := TLabel.Create(Form);
     LblTherapyOrig.Parent := Form;
     LblTherapyOrig.Caption := 'Original: ' + FormatHours(therapyHrs) +
       ' hrs (' + IntToStr(Int64(therapySec)) + ' s)';
     LblTherapyOrig.Font.Color := clGray;
-    LblTherapyOrig.SetBounds(16, 100, 528, 20);
+    LblTherapyOrig.SetBounds(24, 132, 792, 24);
 
     LblMachine := TLabel.Create(Form);
     LblMachine.Parent := Form;
     LblMachine.Caption := 'Machine:';
-    LblMachine.SetBounds(16, 130, 120, 24);
+    LblMachine.SetBounds(24, 176, 180, 30);
 
     EditMachine := TEdit.Create(Form);
     EditMachine.Parent := Form;
     EditMachine.Text := FormatHours(machineHrs);
-    EditMachine.SetBounds(140, 128, 150, 26);
+    EditMachine.SetBounds(200, 172, 220, 32);
 
     LblMachineOrig := TLabel.Create(Form);
     LblMachineOrig.Parent := Form;
     LblMachineOrig.Caption := 'Original: ' + FormatHours(machineHrs) +
       ' hrs (' + IntToStr(Int64(machineSec)) + ' s)';
     LblMachineOrig.Font.Color := clGray;
-    LblMachineOrig.SetBounds(16, 160, 528, 20);
+    LblMachineOrig.SetBounds(24, 214, 792, 24);
 
     BtnApply := TButton.Create(Form);
     BtnApply.Parent := Form;
     BtnApply.Caption := 'Apply';
     BtnApply.Default := True;
     BtnApply.ModalResult := mrOk;
-    BtnApply.SetBounds(356, 200, 92, 32);
+    BtnApply.SetBounds(520, 300, 140, 42);
 
     BtnCancel := TButton.Create(Form);
     BtnCancel.Parent := Form;
     BtnCancel.Caption := 'Cancel';
     BtnCancel.Cancel := True;
     BtnCancel.ModalResult := mrCancel;
-    BtnCancel.SetBounds(452, 200, 92, 32);
+    BtnCancel.SetBounds(676, 300, 140, 42);
 
     while True do
     begin
