@@ -1,0 +1,59 @@
+name: Build Windows
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Lazarus 32-bit (FPC 3.2.2)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://downloads.sourceforge.net/project/lazarus/Lazarus%20Windows%2032%20bits/Lazarus%202.2.6/lazarus-2.2.6-fpc-3.2.2-win32.exe'
+          $installer = Join-Path $env:RUNNER_TEMP 'lazarus-installer.exe'
+          Invoke-WebRequest -Uri $url -OutFile $installer -UserAgent 'github-actions'
+          Start-Process -Wait -FilePath $installer -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-','/DIR="C:\lazarus"'
+          Add-Content -Path $env:GITHUB_PATH -Value 'C:\lazarus'
+
+      - name: Extract mphexeditor
+        shell: pwsh
+        run: Expand-Archive -Path mphexeditor.zip -DestinationPath . -Force
+
+      - name: Copy chiplist.xml into software
+        shell: pwsh
+        run: Copy-Item -Path chiplist.xml -Destination software\chiplist.xml -Force
+
+      - name: Register mphexeditor package and rebuild IDE
+        shell: pwsh
+        run: |
+          lazbuild --add-package-link mphexeditor\src\mphexeditorlaz.lpk
+          lazbuild --build-ide
+
+      - name: Build AsProgrammer
+        shell: pwsh
+        run: lazbuild -B software\AsProgrammer.lpi
+
+      - name: Package runnable folder
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist | Out-Null
+          Copy-Item software\AsProgrammer.exe dist\
+          Copy-Item software\buzzpirathlp.dll dist\
+          Copy-Item software\libiconv2.dll dist\
+          Copy-Item software\libintl3.dll dist\
+          Copy-Item software\chiplist.xml dist\
+          Copy-Item drivers\AVRISPMK2\x86\libusb0_x86.dll dist\libusb0.dll
+          Copy-Item software\lang dist\lang -Recurse
+          Copy-Item software\icons dist\icons -Recurse
+
+      - name: Upload AsProgrammer (exe + dependencies)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AsProgrammer-win32
+          path: dist\
