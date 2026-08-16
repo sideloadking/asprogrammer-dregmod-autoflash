@@ -2289,9 +2289,16 @@ var
   WriteType: byte;
   I2C_DevAddr: byte;
   I2C_ChunkSize: Word = 65535;
+  CheckTemp: Boolean;
 begin
 try
   ButtonCancel.Tag := 0;
+
+  // Always verify the IC right after writing so a bad flash (for example
+  // wrong therapy/machine hours) is caught instead of silently succeeding.
+  CheckTemp := MenuAutoCheck.Checked;
+  MenuAutoCheck.Checked := True;
+
   if not OpenDevice() then exit;
   if Sender <> ComboItem1 then
     if MessageDlg('AsProgrammer', STR_START_WRITE, mtConfirmation, [mbYes, mbNo], 0)
@@ -2458,6 +2465,7 @@ try
   LogPrint(STR_TIME + TimeToStr(Time() - TimeCounter));
 
 finally
+  MenuAutoCheck.Checked := CheckTemp;
   ExitProgMode25;
   AsProgrammer.Programmer.DevClose;
   UnlockControl();
